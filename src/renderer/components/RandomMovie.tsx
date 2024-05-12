@@ -3,7 +3,13 @@ import { MovieProps } from 'renderer/store/slicers/movieReducer';
 import MovieInfo from './MovieCard';
 import UnknownMovieIcon from '../images/movie.png';
 
-function RandomMovie({ movieList }: { movieList: MovieProps[] }) {
+function RandomMovie({
+  movieList,
+  allMoviesList,
+}: {
+  movieList: MovieProps[];
+  allMoviesList: MovieProps[];
+}) {
   const [movieCard, setMovieCard] = useState<MovieProps>({
     id: 0,
     name: '??',
@@ -14,15 +20,23 @@ function RandomMovie({ movieList }: { movieList: MovieProps[] }) {
     rating: '??',
   });
 
+  //* Only for the shuffle animation on UI.
+  //* It's shuffling from all movies so that...
+  //* ...it will have the same movie length all the time.
   const shuffleMovieCards = () => {
-    const randomMovieIndex = Math.floor(Math.random() * movieList.length);
+    const randomMovieIndexForShuffle = Math.floor(
+      Math.random() * allMoviesList.length,
+    );
 
-    setMovieCard(movieList[randomMovieIndex]);
+    setMovieCard(movieList[randomMovieIndexForShuffle]);
   };
 
   const handleRandomMoviePicker = () => {
     const shuffler = setInterval(shuffleMovieCards, 100);
     setTimeout(() => clearInterval(shuffler), 3000);
+
+    const randomMovieIndex = Math.floor(Math.random() * movieList.length);
+    setMovieCard(movieList[randomMovieIndex]);
   };
 
   return (

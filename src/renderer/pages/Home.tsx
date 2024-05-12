@@ -1,14 +1,13 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import Header from 'renderer/components/Header';
-import MovieInfoList from 'renderer/components/MovieInfoList';
 import RandomMovie from 'renderer/components/RandomMovie';
 import { RootState, useAppDispatch } from 'renderer/store/rootStore';
 import { setEndpoint } from 'renderer/store/slicers/generalReducer';
 import { MovieProps, setMovieList } from 'renderer/store/slicers/movieReducer';
 
 function Home() {
-  // const [movieList, setMovieList] = useState<MovieProps[]>([]);
+  const [allMovieList, setAllMovieList] = useState<MovieProps[]>([]);
   const movieList: MovieProps[] = useSelector(
     (state: RootState) => state.movieOps.movieList,
   );
@@ -20,16 +19,22 @@ function Home() {
     dispatch(setMovieList(result));
   };
 
+  const getAllMovies = async () => {
+    const result = await window.electron.getMovieList();
+    setAllMovieList(result);
+  };
+
   useEffect(() => {
     dispatch(setEndpoint('/'));
     getUnwatchedMovies();
+    getAllMovies();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (
     <div>
       <Header />
-      <RandomMovie movieList={movieList} />
+      <RandomMovie movieList={movieList} allMoviesList={allMovieList} />
     </div>
   );
 }
