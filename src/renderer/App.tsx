@@ -5,6 +5,7 @@ import Home from './pages/Home';
 import rootStore from './store/rootStore';
 import UnwatchedMovies from './pages/UnwatchedMovies';
 import AllMovies from './pages/AllMovies';
+import MovieDetailCard from './components/MovieDetailCard';
 
 export default function App() {
   return (
@@ -15,6 +16,7 @@ export default function App() {
             <Route path="/" element={<Home />} />
             <Route path="/unwatched-movies" element={<UnwatchedMovies />} />
             <Route path="/all-movies" element={<AllMovies />} />
+            <Route path="/movie/:id" element={<MovieDetailCard />} />
           </Routes>
         </Router>
       </Provider>

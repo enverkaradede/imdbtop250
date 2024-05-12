@@ -65,6 +65,13 @@ const getMovieById = (id: number) => {
   return smt.get({ id });
 };
 
+const deleteMoviesTable = () => {
+  const db = connect();
+  const smt = db.prepare('DROP TABLE movies');
+
+  smt.run();
+};
+
 export {
   getMovieList,
   createMoviesTable,
@@ -72,4 +79,5 @@ export {
   getMovieById,
   getUnwatchedMovies,
   updateWatchedMovie,
+  deleteMoviesTable,
 };

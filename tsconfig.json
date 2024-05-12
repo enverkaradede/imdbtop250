@@ -6,7 +6,7 @@
     "module": "commonjs",
     "lib": ["dom", "es2022"],
     "jsx": "react-jsx",
-    "strict": true,
+    // "strict": true,
     "sourceMap": true,
     "moduleResolution": "node",
     "esModuleInterop": true,

@@ -51,11 +51,14 @@ const fetchMovieList = async (): Promise<MovieProps[]> => {
       .replace(`${i + 1}. `, '');
     const image = parser(li).find('img.ipc-image').attr('src')?.toString();
 
-    // const imageBlob = image
-    //   ? await fetcher({ url: image })
-    //       .then((resp) => resp.blob())
-    //       .then((blob) => blob.toString())
-    //   : undefined;
+    let imageB64;
+
+    if (image) {
+      const resp = await fetcher({ url: image });
+      const blob = await resp.blob();
+      const buffer = Buffer.from(await blob.arrayBuffer());
+      imageB64 = `data:${blob.type};base64,${buffer.toString('base64')}`;
+    }
 
     const rating = parser(li)
       .find('span.ipc-rating-star')
@@ -75,7 +78,7 @@ const fetchMovieList = async (): Promise<MovieProps[]> => {
       year: parseInt(childElements[0], 10),
       duration: childElements[1],
       rating,
-      image,
+      image: imageB64,
     };
   });
 

@@ -1,6 +1,6 @@
 import { MovieProps } from 'renderer/store/slicers/movieReducer';
 import React from 'react';
-import MovieInfo from './MovieInfo';
+import MovieInfo from './MovieCard';
 
 function MovieInfoList({
   movieList,

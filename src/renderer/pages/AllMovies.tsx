@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import { useSelector } from 'react-redux';
 import Header from 'renderer/components/Header';
-import MovieInfoList from 'renderer/components/MovieInfoList';
+import MoviesGrid from 'renderer/components/MoviesGrid';
 import { RootState, useAppDispatch } from 'renderer/store/rootStore';
 import { setEndpoint } from 'renderer/store/slicers/generalReducer';
 import { MovieProps, setMovieList } from 'renderer/store/slicers/movieReducer';
@@ -27,7 +27,7 @@ function AllMovies() {
   return (
     <div>
       <Header />
-      <MovieInfoList movieList={movieList} />
+      <MoviesGrid movieList={movieList} />
     </div>
   );
 }

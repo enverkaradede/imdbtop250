@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { MovieProps } from 'renderer/store/slicers/movieReducer';
-import MovieInfo from './MovieInfo';
+import MovieInfo from './MovieCard';
 import UnknownMovieIcon from '../images/movie.png';
 
 function RandomMovie({ movieList }: { movieList: MovieProps[] }) {

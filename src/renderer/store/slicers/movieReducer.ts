@@ -12,10 +12,20 @@ type MovieProps = {
 
 type MovieOpsState = {
   movieList: MovieProps[];
+  movie: MovieProps;
 };
 
 const initialState: MovieOpsState = {
   movieList: [],
+  movie: {
+    id: 0,
+    name: '??',
+    duration: '????',
+    year: '????',
+    image: '',
+    isWatched: 0,
+    rating: '??',
+  },
 };
 
 const movieOpsSlice = createSlice({
@@ -25,9 +35,12 @@ const movieOpsSlice = createSlice({
     setMovieList: (state, action: PayloadAction<MovieProps[]>) => {
       state.movieList = action.payload;
     },
+    setMovie: (state, action: PayloadAction<MovieProps>) => {
+      state.movie = action.payload;
+    },
   },
 });
 
 export type { MovieProps };
-export const { setMovieList } = movieOpsSlice.actions;
+export const { setMovieList, setMovie } = movieOpsSlice.actions;
 export default movieOpsSlice.reducer;

@@ -1,7 +1,7 @@
 /* eslint-disable jsx-a11y/no-static-element-interactions */
 /* eslint-disable jsx-a11y/click-events-have-key-events */
 
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { useSelector } from 'react-redux';
 import { RootState, useAppDispatch } from 'renderer/store/rootStore';
 import { MovieProps, setMovieList } from 'renderer/store/slicers/movieReducer';
@@ -18,27 +18,22 @@ function MovieInfo({
   const [isMovieWatched, setIsMovieWatched] = useState<boolean>(
     isWatched === 1,
   );
+
   const endpoint = useSelector((state: RootState) => state.generalOps.endpoint);
-  const movieList = useSelector((state: RootState) => state.movieOps.movieList);
   const dispatch = useAppDispatch();
 
   const updateUnwatchedMovies = async () => {
-    window.electron.updateIsWatched(id, !isMovieWatched);
+    await window.electron.updateIsWatched(id, !isMovieWatched);
     const updatedMovieList = await window.electron.getUnwatchedMovies();
-    if (endpoint === '/unwatched-movies') {
+    if (endpoint !== '/all-movies') {
       dispatch(setMovieList(updatedMovieList));
     }
   };
 
-  const handleIsWatched = () => {
+  const handleIsWatched = async () => {
+    await updateUnwatchedMovies();
     setIsMovieWatched(!isMovieWatched);
-    updateUnwatchedMovies();
   };
-
-  useEffect(() => {
-    setIsMovieWatched(isWatched === 1);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [movieList]);
 
   return (
     <div className="flex flex-col w-auto justify-center items-center my-4 select-none">
@@ -56,7 +51,7 @@ function MovieInfo({
         <img
           key={`movie-i-${id}`}
           className={`${
-            image?.includes('http') ? '' : 'object-contain'
+            image?.includes('data') ? '' : 'object-contain'
           } w-52 h-96 rounded-xl shadow-[rgba(0,_0,_0,_0.2)_0px_60px_40px_-7px]`}
           src={image}
           alt={`${name}-poster`}

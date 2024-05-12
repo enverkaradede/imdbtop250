@@ -1,16 +1,19 @@
 /* eslint-disable no-console */
 import {
   createMoviesTable,
+  deleteMoviesTable,
   getMovieList,
   insertMovieToMoviesTable,
-} from '../services/Database.service';
-import { MovieProps, fetchMovieList } from '../services/IMDbScraper.service';
+} from './Database.service';
+import { MovieProps, fetchMovieList } from './IMDbScraper.service';
 
 const createAndPopulate = async (): Promise<void> => {
   const movieList: MovieProps[] = await fetchMovieList();
   console.log(
     '\n\n==================\nMovie List fetched from IMDb!\n==================\n',
   );
+
+  deleteMoviesTable();
 
   createMoviesTable();
   console.log(
