@@ -20,6 +20,11 @@ const electronHandler = {
       ipcRenderer.once(channel, (_event, ...args) => func(...args));
     },
   },
+  getMovieById: (id: number) => ipcRenderer.invoke('movie:getById', id),
+  getUnwatchedMovies: () => ipcRenderer.invoke('movie:unwatched'),
+  updateIsWatched: (id: number, isWatched: boolean) =>
+    ipcRenderer.invoke('movie:updateIsWatched', { id, isWatched }),
+  getMovieList: () => ipcRenderer.invoke('movie:all'),
 };
 
 contextBridge.exposeInMainWorld('electron', electronHandler);
