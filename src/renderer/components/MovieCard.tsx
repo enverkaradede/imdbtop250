@@ -1,12 +1,16 @@
 /* eslint-disable jsx-a11y/no-static-element-interactions */
 /* eslint-disable jsx-a11y/click-events-have-key-events */
 
-import React, { useState } from 'react';
+import React, { useEffect } from 'react';
 import { useSelector } from 'react-redux';
 import { RootState, useAppDispatch } from 'renderer/store/rootStore';
-import { MovieProps, setMovieList } from 'renderer/store/slicers/movieReducer';
+import {
+  MovieProps,
+  setIsMovieWatched,
+  setMovieList,
+} from 'renderer/store/slicers/movieReducer';
 
-function MovieInfo({
+function MovieCard({
   id,
   name,
   duration,
@@ -15,25 +19,32 @@ function MovieInfo({
   rating,
   isWatched,
 }: MovieProps) {
-  const [isMovieWatched, setIsMovieWatched] = useState<boolean>(
-    isWatched === 1,
+  const dispatch = useAppDispatch();
+  const isMovieWatched = useSelector(
+    (state: RootState) => state.movieOps.isMovieWatched,
   );
 
   const endpoint = useSelector((state: RootState) => state.generalOps.endpoint);
-  const dispatch = useAppDispatch();
 
   const updateUnwatchedMovies = async () => {
     await window.electron.updateIsWatched(id, !isMovieWatched);
     const updatedMovieList = await window.electron.getUnwatchedMovies();
-    if (endpoint !== '/all-movies') {
-      dispatch(setMovieList(updatedMovieList));
+    if (endpoint !== '/unwatched-movies') {
+      dispatch(setIsMovieWatched(!isMovieWatched));
     }
+    dispatch(setMovieList(updatedMovieList));
   };
 
   const handleIsWatched = async () => {
     await updateUnwatchedMovies();
-    setIsMovieWatched(!isMovieWatched);
   };
+
+  useEffect(() => {
+    dispatch(setIsMovieWatched(isWatched === 1));
+    if (endpoint === '/unwatched-movies') {
+      dispatch(setIsMovieWatched(false));
+    }
+  }, [dispatch, endpoint, isWatched]);
 
   return (
     <div className="flex flex-col w-auto justify-center items-center my-4 select-none">
@@ -102,4 +113,4 @@ function MovieInfo({
   );
 }
 
-export default MovieInfo;
+export default MovieCard;

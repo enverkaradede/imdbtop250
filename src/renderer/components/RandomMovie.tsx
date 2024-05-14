@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { MovieProps } from 'renderer/store/slicers/movieReducer';
-import MovieInfo from './MovieCard';
+import MovieCard from './MovieCard';
 import UnknownMovieIcon from '../images/movie.png';
 
 function RandomMovie({
@@ -10,7 +10,7 @@ function RandomMovie({
   movieList: MovieProps[];
   allMoviesList: MovieProps[];
 }) {
-  const [movieCard, setMovieCard] = useState<MovieProps>({
+  const initialMovieState: MovieProps = {
     id: 0,
     name: '??',
     duration: '????',
@@ -18,7 +18,8 @@ function RandomMovie({
     image: UnknownMovieIcon,
     isWatched: 0,
     rating: '??',
-  });
+  };
+  const [movieCard, setMovieCard] = useState<MovieProps>(initialMovieState);
 
   //* Only for the shuffle animation on UI.
   //* It's shuffling from all movies so that...
@@ -27,13 +28,17 @@ function RandomMovie({
     const randomMovieIndexForShuffle = Math.floor(
       Math.random() * allMoviesList.length,
     );
-
-    setMovieCard(movieList[randomMovieIndexForShuffle]);
+    setMovieCard(allMoviesList[randomMovieIndexForShuffle]);
   };
 
-  const handleRandomMoviePicker = () => {
+  const handleRandomMoviePicker = async (): Promise<void> => {
     const shuffler = setInterval(shuffleMovieCards, 100);
-    setTimeout(() => clearInterval(shuffler), 3000);
+    await new Promise<void>((resolve) => {
+      setTimeout(() => {
+        clearInterval(shuffler);
+        resolve();
+      }, 3000);
+    });
 
     const randomMovieIndex = Math.floor(Math.random() * movieList.length);
     setMovieCard(movieList[randomMovieIndex]);
@@ -41,15 +46,17 @@ function RandomMovie({
 
   return (
     <div>
-      <MovieInfo
-        id={movieCard.id}
-        name={movieCard.name}
-        year={movieCard.year}
-        duration={movieCard.duration}
-        image={movieCard.image}
-        rating={movieCard.rating}
-        isWatched={movieCard.isWatched}
-      />
+      {movieCard && (
+        <MovieCard
+          id={movieCard.id}
+          name={movieCard.name}
+          year={movieCard.year}
+          duration={movieCard.duration}
+          image={movieCard.image}
+          rating={movieCard.rating}
+          isWatched={movieCard.isWatched}
+        />
+      )}
       <div className="flex flex-row justify-center">
         <button
           type="button"
