@@ -23,7 +23,6 @@ function MovieCard({
   const isMovieWatched = useSelector(
     (state: RootState) => state.movieOps.isMovieWatched,
   );
-
   const endpoint = useSelector((state: RootState) => state.generalOps.endpoint);
 
   const updateUnwatchedMovies = async () => {
@@ -44,7 +43,7 @@ function MovieCard({
     if (endpoint === '/unwatched-movies') {
       dispatch(setIsMovieWatched(false));
     }
-  }, [dispatch, endpoint, isWatched]);
+  }, [dispatch, endpoint, id, isWatched]);
 
   return (
     <div className="flex flex-col w-auto justify-center items-center my-4 select-none">
