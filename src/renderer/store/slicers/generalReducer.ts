@@ -2,10 +2,12 @@ import { PayloadAction, createSlice } from '@reduxjs/toolkit';
 
 type GeneralOpsState = {
   endpoint: string;
+  filterText: string;
 };
 
 const initialState: GeneralOpsState = {
   endpoint: '',
+  filterText: '',
 };
 
 const generalOpsSlice = createSlice({
@@ -15,8 +17,11 @@ const generalOpsSlice = createSlice({
     setEndpoint: (state, action: PayloadAction<string>) => {
       state.endpoint = action.payload;
     },
+    setFilterText: (state, action: PayloadAction<string>) => {
+      state.filterText = action.payload;
+    },
   },
 });
 
-export const { setEndpoint } = generalOpsSlice.actions;
+export const { setEndpoint, setFilterText } = generalOpsSlice.actions;
 export default generalOpsSlice.reducer;

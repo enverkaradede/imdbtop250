@@ -1,15 +1,21 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import Header from 'renderer/components/Header';
 import MovieInfoList from 'renderer/components/MovieInfoList';
+import SearchBar from 'renderer/components/SearchBar';
 import { RootState, useAppDispatch } from 'renderer/store/rootStore';
 import { setEndpoint } from 'renderer/store/slicers/generalReducer';
 import { MovieProps, setMovieList } from 'renderer/store/slicers/movieReducer';
+import { filterMovieList } from 'renderer/utils/listOps';
 
 function UnwatchedMovies() {
   const movieList: MovieProps[] = useSelector(
     (state: RootState) => state.movieOps.movieList,
   );
+  const filterText = useSelector(
+    (state: RootState) => state.generalOps.filterText,
+  );
+  const [filteredList, setFilteredList] = useState<MovieProps[]>(movieList);
   const dispatch = useAppDispatch();
 
   const getUnwatchedMovies = async () => {
@@ -17,6 +23,12 @@ function UnwatchedMovies() {
 
     dispatch(setMovieList(result));
   };
+
+  useEffect(() => {
+    const filteredMovies = filterMovieList(movieList, filterText);
+
+    setFilteredList(filteredMovies);
+  }, [filterText, movieList]);
 
   useEffect(() => {
     dispatch(setEndpoint('/unwatched-movies'));
@@ -27,7 +39,8 @@ function UnwatchedMovies() {
   return (
     <div>
       <Header />
-      <MovieInfoList movieList={movieList} />
+      <SearchBar className="my-3" />
+      <MovieInfoList movieList={filteredList} />
     </div>
   );
 }
